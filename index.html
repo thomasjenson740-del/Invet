@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>REXON — Investment Demo</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#687386;--line:#e7ebf2;--accent:#6c5ce7;--accent2:#8b7cf6;--good:#159957;--danger:#d64545}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}
+button,input{font:inherit}.hidden{display:none!important}.app{min-height:100vh}.demo{background:#171321;color:#fff;text-align:center;padding:8px;font-size:12px;letter-spacing:.5px}
+.login{min-height:calc(100vh - 34px);display:grid;place-items:center;padding:24px;background:radial-gradient(circle at top right,#dcd6ff,transparent 35%),var(--bg)}
+.auth{width:min(420px,100%);background:var(--card);border:1px solid var(--line);border-radius:24px;padding:32px;box-shadow:0 20px 60px #30364a16}
+.logo{font-size:28px;font-weight:900;letter-spacing:2px}.logo span{color:var(--accent)}
+h1{margin:18px 0 8px;font-size:28px}.muted{color:var(--muted)}label{display:block;margin:18px 0 7px;font-size:13px;font-weight:700}
+input{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:12px;outline:none;background:#fbfcfe}input:focus{border-color:var(--accent)}
+.btn{border:0;border-radius:12px;padding:13px 16px;cursor:pointer;font-weight:800}.primary{width:100%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;margin-top:20px}
+.shell{display:flex;min-height:calc(100vh - 34px)}aside{width:250px;background:#111522;color:#fff;padding:24px 16px;position:sticky;top:0;height:calc(100vh - 34px)}
+.nav{margin-top:30px;display:grid;gap:8px}.nav button{background:transparent;color:#aeb7ca;border:0;text-align:left;padding:12px;border-radius:10px;cursor:pointer}.nav button.active,.nav button:hover{background:#242a3b;color:#fff}
+main{flex:1;padding:28px;max-width:1400px;margin:auto;width:100%}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.top h2{margin:0}.logout{background:var(--card);border:1px solid var(--line)}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}.k{color:var(--muted);font-size:13px}.v{font-size:27px;font-weight:900;margin-top:7px}.good{color:var(--good)}
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-top:16px}.section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}.section h3{margin:0 0 16px}.chart{height:230px;display:flex;align-items:end;gap:8px;padding:20px 5px 0}.bar{flex:1;background:linear-gradient(180deg,var(--accent2),var(--accent));border-radius:7px 7px 2px 2px;min-height:25px}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:13px 8px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--muted)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.action{padding:18px;border-radius:14px;border:1px solid var(--line);background:#fafbff;cursor:pointer}.action b{display:block;margin-bottom:5px}
+.page{display:none}.page.active{display:block}.notice{padding:12px 14px;border-radius:12px;background:#fff8df;border:1px solid #f1df9a;color:#775f16;font-size:13px;margin-bottom:16px}
+.form{max-width:600px}.form .btn{margin-top:18px}.pill{display:inline-block;padding:5px 9px;border-radius:99px;background:#eaf8f0;color:var(--good);font-size:11px;font-weight:800}
+@media(max-width:900px){aside{width:76px;padding:18px 10px}.nav button{font-size:0;text-align:center}.nav button:before{content:"•";font-size:22px}.brandtxt{display:none}.cards{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+@media(max-width:600px){main{padding:16px}.cards{grid-template-columns:1fr 1fr}.v{font-size:21px}.top{gap:10px}.top h2{font-size:20px}.auth{padding:24px}}
+</style>
+</head>
+<body>
+<div class="demo">DEMO / SIMULATION — No real funds, investments, or withdrawals are processed.</div>
+
+<section id="login" class="login">
+  <div class="auth">
+    <div class="logo">REX<span>ON</span></div>
+    <h1>Welcome back</h1>
+    <p class="muted">Sign in to your demo investment dashboard.</p>
+    <label>Email</label><input id="email" type="email" value="demo@rexon.local">
+    <label>Password</label><input id="password" type="password" value="demo123">
+    <button class="btn primary" onclick="login()">Sign in</button>
+    <p class="muted" style="font-size:12px;margin-top:15px">Demo credentials are prefilled. No account is created.</p>
+  </div>
+</section>
+
+<section id="app" class="shell hidden">
+<aside>
+  <div class="logo">R<span>·</span><span class="brandtxt">EXON</span></div>
+  <div class="nav">
+    <button class="active" onclick="showPage('dashboard',this)">Dashboard</button>
+    <button onclick="showPage('wallet',this)">Wallet</button>
+    <button onclick="showPage('deposit',this)">Deposit</button>
+    <button onclick="showPage('withdraw',this)">Withdraw</button>
+    <button onclick="showPage('transactions',this)">Transactions</button>
+  </div>
+</aside>
+<main>
+<div class="top"><h2 id="title">Dashboard</h2><button class="btn logout" onclick="logout()">Logout</button></div>
+
+<div id="dashboard" class="page active">
+  <div class="notice">This is a frontend demo. Balances and transactions below are fictional sample data.</div>
+  <div class="cards">
+    <div class="card"><div class="k">Demo balance</div><div class="v">$1,250.00</div></div>
+    <div class="card"><div class="k">Demo profit</div><div class="v good">+$185.40</div></div>
+    <div class="card"><div class="k">Portfolio</div><div class="v">$1,435.40</div></div>
+    <div class="card"><div class="k">Status</div><div class="v"><span class="pill">DEMO</span></div></div>
+  </div>
+  <div class="grid">
+    <div class="section"><h3>Portfolio activity</h3><div class="chart">
+      <i class="bar" style="height:35%"></i><i class="bar" style="height:48%"></i><i class="bar" style="height:42%"></i><i class="bar" style="height:61%"></i><i class="bar" style="height:55%"></i><i class="bar" style="height:74%"></i><i class="bar" style="height:82%"></i><i class="bar" style="height:91%"></i>
+    </div></div>
+    <div class="section"><h3>Quick actions</h3><div class="actions">
+      <button class="action" onclick="showPage('deposit')"><b>Deposit</b><span class="muted">Demo only</span></button>
+      <button class="action" onclick="showPage('withdraw')"><b>Withdraw</b><span class="muted">Demo request</span></button>
+    </div></div>
+  </div>
+</div>
+
+<div id="wallet" class="page">
+  <div class="section"><h3>Demo wallet</h3><p class="muted">No real blockchain wallet is connected in this version.</p>
+  <label>Demo wallet ID</label><input value="REXON-DEMO-7F4A21" readonly></div>
+</div>
+
+<div id="deposit" class="page">
+  <div class="section form"><h3>Demo deposit</h3><div class="notice">Do not send cryptocurrency to this page. It does not accept real deposits.</div>
+  <label>Amount (USD)</label><input id="dep" type="number" min="1" placeholder="100">
+  <button class="btn primary" onclick="demoDeposit()">Simulate deposit</button></div>
+</div>
+
+<div id="withdraw" class="page">
+  <div class="section form"><h3>Demo withdrawal</h3><div class="notice">No real withdrawal will be processed. This only creates a local demo request.</div>
+  <label>Amount (USD)</label><input id="wd" type="number" min="1" placeholder="100">
+  <button class="btn primary" onclick="demoWithdraw()">Create demo request</button></div>
+</div>
+
+<div id="transactions" class="page">
+  <div class="section"><h3>Transaction history</h3><table><thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th></tr></thead>
+  <tbody id="tx"><tr><td>2026-10-07</td><td>Demo profit</td><td class="good">+$35.40</td><td><span class="pill">Demo</span></td></tr><tr><td>2026-10-01</td><td>Demo deposit</td><td>+$1,000.00</td><td><span class="pill">Demo</span></td></tr></tbody></table></div>
+</div>
+</main>
+</section>
+
+<script>
+function login(){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden')}
+function logout(){document.getElementById('app').classList.add('hidden');document.getElementById('login').classList.remove('hidden')}
+function showPage(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');document.getElementById('title').textContent=id[0].toUpperCase()+id.slice(1)}
+function demoDeposit(){let v=+document.getElementById('dep').value;if(!v)return alert('Enter an amount.');addTx('Demo deposit','+$'+v.toFixed(2));alert('Demo deposit recorded locally. No money was transferred.')}
+function demoWithdraw(){let v=+document.getElementById('wd').value;if(!v)return alert('Enter an amount.');addTx('Demo withdrawal','-$'+v.toFixed(2));alert('Demo withdrawal request created locally. No money will be sent.')}
+function addTx(type,amt){document.getElementById('tx').insertAdjacentHTML('afterbegin',`<tr><td>${new Date().toISOString().slice(0,10)}</td><td>${type}</td><td>${amt}</td><td><span class="pill">Demo</span></td></tr>`)}
+</script>
+</body>
+</html>
